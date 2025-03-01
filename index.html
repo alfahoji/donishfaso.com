@@ -1,0 +1,472 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DonishFaso - Языковой центр</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #E53935;
+            --secondary: #43A047;
+            --dark: #333333;
+            --accent: #FFD600;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        body {
+            background: var(--dark);
+            color: white;
+        }
+
+        .header {
+            background: linear-gradient(45deg, var(--dark), var(--primary));
+            padding: 4rem 2rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::after {
+            content: '';
+            position: absolute;
+            bottom: -50px;
+            left: 0;
+            width: 100%;
+            height: 100px;
+            background: linear-gradient(to top, var(--dark), transparent);
+        }
+
+        nav {
+            background: rgba(51, 51, 51, 0.95);
+            padding: 1.5rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+
+        nav ul {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+            gap: 3rem;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: white;
+            font-weight: 500;
+            padding: 1rem;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        nav a::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 3px;
+            background: var(--secondary);
+            transition: width 0.3s;
+        }
+
+        nav a:hover::before {
+            width: 100%;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 4rem auto;
+            padding: 0 2rem;
+        }
+
+        .page {
+            display: none;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 3rem;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            transform: translateY(20px);
+            opacity: 0;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .active-page {
+            display: block;
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .language-card {
+            background: linear-gradient(45deg, rgba(67, 160, 71, 0.1), transparent);
+            padding: 2rem;
+            border-radius: 15px;
+            margin: 2rem 0;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: transform 0.3s;
+        }
+
+        .language-card:hover {
+            transform: translateY(-5px);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 3rem 0;
+            background: rgba(255, 255, 255, 0.05);
+            font-size: 1.1rem;
+        }
+
+        th, td {
+            padding: 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+        }
+
+        th {
+            background: var(--primary);
+            font-weight: 700;
+        }
+
+        td:nth-child(1) { width: 30%; }
+        td:nth-child(2) { width: 35%; }
+        td:nth-child(3) { width: 35%; }
+
+        .contact-info {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            margin: 2rem 0;
+            padding: 1.5rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            transition: all 0.3s;
+        }
+
+        .contact-info:hover {
+            background: rgba(67, 160, 71, 0.1);
+        }
+        form {
+            max-width: 600px;
+            margin: 3rem auto;
+            font-size: 1.1rem;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 1.2rem;
+            margin: 1rem 0;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+            border-radius: 8px;
+            transition: all 0.3s;
+            font-size: 1rem;
+        }
+
+        select option {
+            background: var(--dark);
+            color: white;
+            padding: 1rem;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--secondary);
+            box-shadow: 0 0 15px rgba(67, 160, 71, 0.2);
+        }
+
+        button {
+            background: linear-gradient(45deg, var(--secondary), var(--primary));
+            color: white;
+            border: none;
+            padding: 1.5rem 3rem;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+            font-size: 1.1rem;
+            margin-top: 1rem;
+        }
+
+        button::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(255, 255, 255, 0.2),
+                transparent
+            );
+            transition: left 0.5s;
+        }
+
+        button:hover::after {
+            left: 100%;
+        }
+
+        @media (max-width: 768px) {
+            nav ul {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .container {
+                margin: 2rem auto;
+                padding: 0 1rem;
+            }
+            
+            .page {
+                padding: 2rem;
+            }
+
+            table {
+                font-size: 0.9rem;
+            }
+
+            th, td {
+                padding: 0.8rem;
+            }
+
+            button {
+                width: 100%;
+                padding: 1.2rem;
+            }
+        }
+
+        .social-icon {
+            font-size: 2rem;
+            margin-right: 1rem;
+        }
+
+        .instagram { color: #E1306C; }
+        .whatsapp { color: #25D366; }
+
+        .language-list {
+            columns: 2;
+            list-style: none;
+            padding: 2rem;
+            font-size: 1.2rem;
+        }
+
+        .language-list li {
+            margin: 1rem 0;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <h1 style="font-size: 3.5rem; margin-bottom: 1rem;">DONISHFASO</h1>
+        <p style="font-size: 1.2rem; opacity: 0.9;">Международный центр языкового мастерства</p>
+    </header>
+
+    <nav>
+        <ul>
+            <li><a href="#" onclick="showPage('home')">Главная</a></li>
+            <li><a href="#" onclick="showPage('services')">Услуги</a></li>
+            <li><a href="#" onclick="showPage('contacts')">Контакты</a></li>
+            <li><a href="#" onclick="showPage('about')">О нас</a></li>
+            <li><a href="#" onclick="showPage('registration')">Регистрация</a></li>
+        </ul>
+    </nav>
+
+    <div class="container">
+        <!-- Главная -->
+        <div id="home" class="page active-page">
+            <h2 style="color: var(--secondary); margin-bottom: 2rem;">Добро пожаловать в DonishFaso!</h2>
+            <div class="language-card">
+                <p style="font-size: 1.2rem; line-height: 1.6; text-align: center;">
+        Мы - современный образовательный центр, где границы стираются, а языки становятся ключом к новым возможностям. 
+                    Наши программы разработаны для тех, кто стремится к профессиональному росту и культурному обмену. 
+                    Погрузитесь в мир языков с лучшими преподавателями и инновационными методиками обучения.
+                </p>
+                <h3 style="margin-top: 2rem;">Наши преимущества:</h3>
+                <ul style="list-style: none; margin-top: 1.5rem;">
+                    <li style="padding: 1rem; border-bottom: 1px solid rgba(255,255,255,0.1);">
+                        <i class="fas fa-certificate" style="color: var(--accent); margin-right: 1rem;"></i>
+                        Аккредитованные программы обучения
+                    </li>
+                    <li style="padding: 1rem; border-bottom: 1px solid rgba(255,255,255,0.1);">
+                        <i class="fas fa-chalkboard-teacher" style="color: var(--accent); margin-right: 1rem;"></i>
+                        Носители языка и сертифицированные педагоги
+                    </li>
+                    <li style="padding: 1rem;">
+                        <i class="fas fa-laptop-code" style="color: var(--accent); margin-right: 1rem;"></i>
+                        Интерактивная платформа с VR-технологиями
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Услуги -->
+        <div id="services" class="page">
+            <h2 style="color: var(--secondary); font-size: 2rem;">Наши услуги</h2>
+            
+            <div class="language-card">
+                <h3 style="font-size: 1.5rem;">Доступные языки:</h3>
+                <ul class="language-list">
+                    <li>Английский</li>
+                    <li>Русский</li>
+                    <li>Китайский</li>
+                    <li>Немецкий</li>
+                    <li>Таджикский</li>
+                </ul>
+            </div>
+
+            <div class="language-card">
+                <h3 style="font-size: 1.5rem;">Программы обучения:</h3>
+                <table>
+                    <tr>
+                        <th>Уровень</th>
+                        <th>Стоимость (сомони)</th>
+                        <th>Количество уроков</th>
+                    </tr>
+                    <tr>
+                        <td>A1</td>
+                        <td>200</td>
+                        <td>10</td>
+                    </tr>
+                    <tr>
+                        <td>A2</td>
+                        <td>220</td>
+                        <td>10</td>
+                    </tr>
+                    <tr>
+                        <td>B1</td>
+                        <td>270</td>
+                        <td>10</td>
+                    </tr>
+                    <tr>
+                        <td>B2</td>
+                        <td>300</td>
+                        <td>10</td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="language-card">
+                <h3 style="font-size: 1.5rem;">Дополнительные услуги:</h3>
+                <ul class="price-list">
+                    <li>✓ Подготовка документов для визы</li>
+                    <li>✓ Подготовка к международным экзаменам</li>
+                    <li>✓ Индивидуальная консультация</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Контакты -->
+        <div id="contacts" class="page">
+            <h2 style="color: var(--secondary);">Свяжитесь с нами</h2>
+            <div class="contact-info">
+                <i class="fab fa-instagram social-icon instagram"></i>
+                <a href="https://instagram.com/donishfaso.tj" style="color: white; text-decoration: none;">
+                    @donishfaso.tj
+                </a>
+             </div>
+            <div class="contact-info">
+                <i class="fab fa-whatsapp social-icon whatsapp"></i>
+                <a href="https://wa.me/992112055000" style="color: white; text-decoration: none;">
+                    +992 112 055 000
+                </a>
+            </div>
+        </div>
+
+        <!-- О нас -->
+        <div id="about" class="page">
+            <h2 style="color: var(--secondary); font-size: 2rem;">О нас</h2>
+            <div class="language-card">
+                <p style="font-size: 1.1rem; line-height: 1.6;">
+                    Основанный в 2023 году, наш центр быстро стал лидером в языковом образовании. 
+                    Мы сочетаем традиционные методы преподавания с цифровыми инновациями, 
+                    создавая идеальную среду для обучения. Наши аудитории оборудованы 
+                    интерактивными панелями, а зоны отдыха с библиотекой на 5 языках 
+                    помогают погрузиться в языковую среду.
+                </p>
+            </div>
+        </div>
+
+        <!-- Регистрация -->
+        <div id="registration" class="page">
+            <h2 style="color: var(--secondary); font-size: 2rem;">Регистрация</h2>
+            <form>
+                <input type="text" placeholder="Ваше полное имя" required>
+                <input type="email" placeholder="Электронная почта" required>
+                <input type="tel" placeholder="Номер телефона" required pattern="^\+?[0-9\s\-\(\)]{9,}$">
+                <select required>
+                    <option value="">Выберите язык</option>
+                    <option>Английский</option>
+                    <option>Русский</option>
+                    <option>Китайский</option>
+                    <option>Немецкий</option>
+                    <option>Таджикский</option>
+                </select>
+                <select required>
+                    <option value="">Выберите уровень</option>
+                    <option>A1</option>
+                    <option>A2</option>
+                    <option>B1</option>
+                    <option>B2</option>
+                </select>
+                <button type="submit">Отправить заявку</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        let currentPage = null;
+        let timers = [];
+
+        function showPage(pageId) {
+            if (currentPage === pageId) return;
+            
+            timers.forEach(clearTimeout);
+            timers = [];
+            
+            const pages = document.querySelectorAll('.page');
+            pages.forEach(page => {
+                if (page.id === pageId) {
+                    page.style.display = 'block';
+                    timers.push(setTimeout(() => page.classList.add('active-page'), 10));
+                } else {
+                    page.classList.remove('active-page');
+                    timers.push(setTimeout(() => {
+                        if (page.id !== currentPage) page.style.display = 'none';
+                    }, 500));
+                }
+            });
+            currentPage = pageId;
+        }
+
+        window.addEventListener('scroll', () => {
+            const header = document.querySelector('.header');
+            const scrolled = window.pageYOffset;
+            header.style.backgroundPositionY = scrolled * 0.5 + 'px';
+        });
+
+        showPage('home');
+    </script>
+</body>
+</html>
+       
